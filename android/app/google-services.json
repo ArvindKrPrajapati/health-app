@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "963664810191",
+    "project_id": "intern-8a316",
+    "storage_bucket": "intern-8a316.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:963664810191:android:5e5d528d6877e09cc227ba",
+        "android_client_info": {
+          "package_name": "com.heathapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "963664810191-fa4ofqrapqolq7pk2r5bcmctbu8s63lo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.heathapp",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "963664810191-ggfubrqqg4jbnb6po9jott3llfda1epa.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3Tjtl9hE-YjSLcJRDSrjqi79I60Pn0CI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "963664810191-ggfubrqqg4jbnb6po9jott3llfda1epa.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
