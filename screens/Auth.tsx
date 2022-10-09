@@ -1,5 +1,5 @@
-import React, {memo, useState} from 'react';
-import {View, Image, Dimensions, Text} from 'react-native';
+import React, { memo, useState } from 'react';
+import { View, Image, Dimensions, Text, Pressable } from 'react-native';
 import {
   useTheme,
   StyleService,
@@ -13,27 +13,33 @@ import {
 
 //import Text from '../components/Text';
 import Container from '../components/Container';
-import {Images} from '../assets/images';
+import { Images } from '../assets/images';
 import TabBar from '../components/TabBar';
-import {SceneMap, TabView} from 'react-native-tab-view';
-import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
+import { SceneMap, TabView } from 'react-native-tab-view';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import useLayout from '../hooks/useLayout';
+import { useNavigation } from '@react-navigation/native';
 
-const initialLayout = {width: Dimensions.get('window').width};
+const initialLayout = { width: Dimensions.get('window').width };
 
 const Auth = memo(() => {
-  const {height, width, top, bottom} = useLayout();
+  const { height, width, top, bottom } = useLayout();
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
 
-  const [email, setEmail] = useState('');
 
   const SignInTab = React.useCallback(() => {
+    const navigation = useNavigation();
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+
     return (
       <View style={styles.layout}>
         <Input
           placeholder="Your email"
-          onChange={e => setEmail(e.target.value)}
+          onChangeText={e => setEmail(e)}
+          value={email}
           style={styles.input}
           accessoryLeft={props => (
             <Icon
@@ -47,7 +53,24 @@ const Auth = memo(() => {
             />
           )}
         />
+        <Input
+          placeholder="Password"
+          onChangeText={e => setPassword(e)}
+          value={password}
+          style={styles.input}
+          accessoryLeft={props => (
+            <Icon
+              {...props}
+              style={[styles.icon, { tintColor: '#fff' }]}
+              pack="assets"
+              name={'padLock'}
+            />
+          )}
+        />
         <Button children="Sign In with Web3" style={styles.button} />
+        <Pressable onPress={() => { navigation.navigate("Signup") }} style={{ padding: 10, marginBottom: 10 }}>
+          <Text style={{ color: '#fff', textAlign: 'center' }}>Signup</Text>
+        </Pressable>
       </View>
     );
   }, []);
