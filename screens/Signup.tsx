@@ -42,12 +42,15 @@ const Signup = memo(() => {
                     setLoading(true);
                     try {
                         // await push(ref(db, '/coach'), { name, email, mobile });
-                        await _signup(name, password, email, mobile)
-                        navigation.reset({
-                            index: 1,
-                            routes: [{ name: 'Tab' }],
-                        })
-                        // Alert.alert("Success", "Account Created");
+                        const res = await _signup(name, password, email, mobile)
+                        if (res?.signup) {
+                            navigation.reset({
+                                index: 1,
+                                routes: [{ name: 'Tab' }],
+                            })
+                        } else {
+                            Alert.alert("Error", "Signup Error")
+                        }
                         setEmail('');
                         setName('');
                         setMobile('');
@@ -123,7 +126,7 @@ const Signup = memo(() => {
                     )}
                 />
                 <Button disabled={(!name || !email || !password || !mobile)} onPress={handleSignup} children={loading ? 'Signing Up....' : 'Signup with Web3'} style={styles.button} />
-                <Pressable disabled={(!name || !email || !password || !mobile)} onPress={() => { navigation.navigate('Auth', {}) }} style={{ padding: 10, marginBottom: 10 }}>
+                <Pressable onPress={() => { navigation.navigate('Auth', {}) }} style={{ padding: 10, marginBottom: 10 }}>
                     <Text style={{ color: '#fff', textAlign: 'center' }}>Login</Text>
                 </Pressable>
             </View>

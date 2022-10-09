@@ -26,9 +26,10 @@ const AppContainer = () => {
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={auth ? Tab.name : Auth.name}>
-        {/* {auth ? ( */}
+        initialRouteName={Auth}>
         <>
+          <Stack.Screen name="Auth" component={Auth} />
+          <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Tab" component={Tab} />
           <Stack.Screen name="UserProfile" component={UserProfile} />
           <Stack.Screen name="WandDProfile" component={WandDProfile} />
@@ -38,14 +39,7 @@ const AppContainer = () => {
           <Stack.Screen name="FoodInformation" component={FoodInformation} />
           <Stack.Screen name="VideoCall" component={VideoCall} />
           <Stack.Screen name="AudioCall" component={AudioCall} />
-          {/* </> */}
-          {/* ) : ( */}
-          {/* <> */}
-          <Stack.Screen name="Auth" component={Auth} />
-          <Stack.Screen name="Signup" component={Signup} />
-
         </>
-        {/* )} */}
       </Stack.Navigator>
     </NavigationContainer>
   );
