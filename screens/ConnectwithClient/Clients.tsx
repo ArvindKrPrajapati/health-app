@@ -7,8 +7,8 @@ import { Images } from '../../assets/images';
 import ClientDetails from './ClientDetails';
 import keyExtractor from '../../utils/keyExtractor';
 import { RefreshControl } from 'react-native-web-refresh-control';
-import { db } from '../../utils/firebase-config2';
-import { collection, getDoc, doc, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../../utils/firebase-config';
+import { collection, getDoc, doc, query, where } from 'firebase/firestore/lite';
 import { AuthContext } from '../../context/AuthContext'
 const Clients = memo(() => {
   const { height, width, top, bottom } = useLayout();
@@ -21,14 +21,15 @@ const Clients = memo(() => {
     try {
       console.log("here");
 
-      const unsub = onSnapshot(doc(db, "userChats", currentUser.id), (doc) => {
-        doc && console.log(doc.data());
+      // const unsub = onSnapshot(doc(db, "userChats", currentUser.id), (doc) => {
+      //   doc && console.log(doc.data());
 
-      })
+      // })
       // const filter = where('from', '==', 1);
-      // const snapshot = await getDocs(query(msgRef, filter));
+      const snapshot = await getDoc(doc(db, "userChats", currentUser.id));
 
-      // const d = snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id }));
+      setChats(snapshot.data())
+
       // const unique = []
       // d.filter((obj) => {
       //   let i = unique.findIndex(x => x.from === obj.from)
@@ -59,7 +60,7 @@ const Clients = memo(() => {
   }, []);
   return (
     <FlatList
-      data={chats}
+      data={Object.entries(chats)}
       renderItem={renderItem}
       scrollEventThrottle={16}
       showsVerticalScrollIndicator={false}

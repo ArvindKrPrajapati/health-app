@@ -47,11 +47,41 @@ const Conversation = memo(({ route }: any) => {
   const roomId = '048d3f70-5dd6-4298-a1f5-cc0a1d580cca';
 
   const fetchMessage = async () => {
+    setMessages([
+      {
+        _id: 0,
+        createdAt: new Date(),
+        text: '',
+        image: imageMess,
+        user: {
+          _id: 2,
+          name: 'React Native',
+        },
+      },
 
+      {
+        _id: 2,
+        text: 'Hi There Bro! 👋',
+        createdAt: new Date(),
+        user: {
+          _id: 1,
+          name: 'React Native',
+        },
+      },
+      {
+        _id: 3,
+        text: 'Hi There Bro! ',
+        createdAt: new Date(),
+        user: {
+          _id: 3,
+          name: 'React Native',
+        },
+      },
+    ]);
     try {
-      const filter = where('to', '==', user.id);
-      const snapshot = await getDocs(query(msgRef, filter));
-      setMessages(snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id })));
+      // const filter = where('to', '==', user.id);
+      // const snapshot = await getDocs(query(msgRef, filter));
+      // setMessages(snapshot.docs.map(doc => ({ ...doc.data(), _id: doc.id })));
 
     } catch (error) {
       console.log(error);
