@@ -1,5 +1,5 @@
 const url = "https://us-central1-health-app-3c1fe.cloudfunctions.net/";
-import { collection, addDoc, where, getDocs, query } from 'firebase/firestore/lite';
+import { collection, addDoc, where, getDocs, query, setDoc, doc } from 'firebase/firestore/lite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { db } from './firebase-config';
 
@@ -63,6 +63,7 @@ const _signup = async (name: string, password: string, email: string, mobile: st
         if (res) {
             const fbRes = await addDoc(collection(db, "coach"), { email, mobile, name })
             if (fbRes?.id) {
+                await setDoc(doc(db, "userChats", fbRes.id), {})
                 const user = { name, email, mobile, id: fbRes.id }
                 await AsyncStorage.setItem("LOGGED_IN_USER", JSON.stringify(user))
                 console.log(user);
@@ -79,4 +80,8 @@ const _signup = async (name: string, password: string, email: string, mobile: st
     }
 }
 
-export { _login, _signup }
+const createCombinedId = (myId, userId) => {
+    return myId > userId ? myId + userId : userId + myId
+}
+
+export { _login, _signup, createCombinedId }
