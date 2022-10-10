@@ -44,6 +44,10 @@ const Signup = memo(() => {
                         // await push(ref(db, '/coach'), { name, email, mobile });
                         const res = await _signup(name, password, email, mobile)
                         if (res?.signup) {
+                            setEmail('');
+                            setName('');
+                            setMobile('');
+                            setPassword('')
                             navigation.reset({
                                 index: 1,
                                 routes: [{ name: 'Tab' }],
@@ -51,17 +55,13 @@ const Signup = memo(() => {
                         } else {
                             Alert.alert("Error", "Signup Error")
                         }
-                        setEmail('');
-                        setName('');
-                        setMobile('');
-                        setPassword('')
                         setLoading(false);
                     } catch (error) {
                         console.log(error);
 
                     }
                 } else {
-                    Alert.alert("Error", "Enter Valid Name or Email or Mobile No.");
+                    Alert.alert("Error", "something went wrong");
                 }
             }
         }
@@ -124,6 +124,7 @@ const Signup = memo(() => {
                             name={'padLock'}
                         />
                     )}
+                    secureTextEntry={true}
                 />
                 <Button disabled={(!name || !email || !password || !mobile)} onPress={handleSignup} children={loading ? 'Signing Up....' : 'Signup with Web3'} style={styles.button} />
                 <Pressable onPress={() => { navigation.navigate('Auth', {}) }} style={{ padding: 10, marginBottom: 10 }}>

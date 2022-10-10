@@ -48,7 +48,7 @@ const ClientDetails = ({ data }) => {
 
 
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { data: data[1].userInfo })}>
+    <TouchableOpacity onPress={() => navigation.navigate('ChatPage', { data: data[1].userInfo, id: data[0] })}>
       <View style={styles.container}>
         <View style={styles.main}>
           <Avatar
@@ -58,10 +58,14 @@ const ClientDetails = ({ data }) => {
           />
           <View>
             <Text category="p1">{data[1].userInfo.name}</Text>
-            {/* <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Icon name="check" style={styles.icon} />
-              <Text category={data.read ? 'c1' : 'label'}>{data.message}</Text>
-            </View> */}
+            {
+              data[1].userInfo.lastMessage && (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Icon name="check" style={styles.icon} />
+                  <Text category={data[1].userInfo?.lastMessage.read ? 'c1' : 'label'}>{data[1].userInfo?.lastMessage.text}</Text>
+                </View>
+              )
+            }
           </View>
         </View>
         <View>
@@ -96,6 +100,7 @@ const themedStyles = StyleService.create({
   },
   main: {
     flexDirection: 'row',
+    alignItems: "center"
   },
   unread: {
     backgroundColor: 'color-primary-100',

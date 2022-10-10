@@ -1,5 +1,5 @@
-import React, {memo} from 'react';
-import {View, ScrollView} from 'react-native';
+import React, { memo } from 'react';
+import { View, ScrollView } from 'react-native';
 import {
   TopNavigation,
   StyleService,
@@ -9,25 +9,26 @@ import {
   Text,
 } from '@ui-kitten/components';
 import useLayout from '../../hooks/useLayout';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 //import Text from 'components/Text';
 import Content from '../../components/Content';
 import Container from '../../components/Container';
 import NavigationAction from '../../components/NavigationAction';
-import {dataMeal, Data_Weight} from './data';
+import { dataMeal, Data_Weight } from './data';
 import ItemMeal from './ItemMeal';
-import {RefreshControl} from 'react-native-web-refresh-control';
+import { RefreshControl } from 'react-native-web-refresh-control';
 import CardWeightChart from './Chart';
 
 const Home = memo(() => {
-  const {top, bottom} = useLayout();
+  const { top, bottom } = useLayout();
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
-  const {navigate} = useNavigation();
+  const { navigate } = useNavigation();
+
   return (
     <Container style={styles.container}>
-      <Layout style={[{paddingTop: top}, styles.nav]} level="2">
+      <Layout style={[{ paddingTop: top }, styles.nav]} level="2">
         <TopNavigation
           style={styles.topNav}
           appearance="control"
@@ -41,7 +42,7 @@ const Home = memo(() => {
       </Layout>
       <Content
         refreshControl={<RefreshControl tintColor="#F0DF67" />}
-        contentContainerStyle={[styles.content, {paddingBottom: bottom + 24}]}>
+        contentContainerStyle={[styles.content, { paddingBottom: bottom + 24 }]}>
         <CardWeightChart
           strokeColor={theme['color-primary-100']}
           data={Data_Weight}

@@ -19,6 +19,7 @@
     "@react-navigation/native-stack": "^6.7.0",
     "@ui-kitten/components": "^5.1.2",
     "@ui-kitten/eva-icons": "^5.1.2",
+    "axios": "^1.1.2",
     "firebase": "^9.6.11",
     "magic-sdk": "^9.0.0",
     "react": "18.0.0",

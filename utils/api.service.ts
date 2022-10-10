@@ -1,6 +1,7 @@
 const url = "https://us-central1-health-app-3c1fe.cloudfunctions.net/";
 import { collection, addDoc, where, getDocs, query, setDoc, doc } from 'firebase/firestore/lite';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios"
 import { db } from './firebase-config';
 
 const common = (data, method, token) => {
@@ -35,9 +36,13 @@ const common = (data, method, token) => {
 
 const _login = async (email: string, password: string) => {
     try {
-        // const res = await fetch(url + "signUp", common({ email, password }, "POST", ""))
-        const res = true;
-        if (res) {
+        const res = await fetch(url + "login", {
+            method: "POST",
+            body: JSON.stringify({ email, password })
+        })
+        const result = res?.json()
+        // this api is not working
+        if (false) {
             const coach = collection(db, 'coach');
             const filter = where('email', '==', email);
             const snapshot = await getDocs(query(coach, filter));
@@ -53,6 +58,7 @@ const _login = async (email: string, password: string) => {
         }
 
     } catch (error) {
+        return { login: false }
         console.log(error)
     }
 }

@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useState, useContext, useEffect } from 'react';
 import { View, Image, Dimensions, Text, Pressable, Alert } from 'react-native';
 import {
   useTheme,
@@ -20,6 +20,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import useLayout from '../hooks/useLayout';
 import { useNavigation } from '@react-navigation/native';
 import { _login } from "../utils/api.service"
+import { AuthContext } from '../context/AuthContext';
 const initialLayout = { width: Dimensions.get('window').width };
 
 const Auth = memo(() => {
@@ -30,9 +31,20 @@ const Auth = memo(() => {
 
   const SignInTab = React.useCallback(() => {
     const navigation = useNavigation();
+    const { currentUser } = useContext(AuthContext)
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+      if (currentUser?.id) {
+        console.log(currentUser);
+        navigation.replace("Tab")
+      } else {
+        console.log("you need to login");
+
+      }
+    }, [])
 
     const handleLogin = async () => {
       if (!loading) {
@@ -42,16 +54,18 @@ const Auth = memo(() => {
           try {
             const res = await _login(email, password)
             if (res?.login) {
+              setEmail('');
+              setPassword('')
               navigation.reset({
                 index: 1,
                 routes: [{ name: 'Tab' }],
               })
+
             } else {
-              Alert.alert("Error", "Wrong Credentials")
+              Alert.alert("Error", "Something went wrong")
             }
-            setEmail('');
-            setPassword('')
             setLoading(false);
+
           } catch (error) {
             console.log(error);
 
@@ -94,6 +108,7 @@ const Auth = memo(() => {
               name={'padLock'}
             />
           )}
+          secureTextEntry={true}
         />
         <Button disabled={(!email || !password)} children={loading ? "Signing in ....." : "Sign In with Web3"} style={styles.button} onPress={handleLogin} />
         <Pressable onPress={() => { navigation.navigate("Signup") }} style={{ padding: 10, marginBottom: 10 }}>

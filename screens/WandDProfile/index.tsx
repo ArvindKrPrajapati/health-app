@@ -1,4 +1,4 @@
-import React, {memo, useState} from 'react';
+import React, { memo, useState } from 'react';
 import {
   View,
   Image,
@@ -21,7 +21,7 @@ import {
   DrawerGroup,
   DrawerItem,
 } from '@ui-kitten/components';
-import {useNavigation, NavigationProp} from '@react-navigation/native';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
 import useLayout from '../../hooks/useLayout';
 
 //import Text from '../../components/Text';
@@ -30,13 +30,13 @@ import Container from '../../components/Container';
 import CurrencyText from '../../components/CurrencyText';
 import NavigationAction from '../../components/NavigationAction';
 
-import {Images} from '../../assets/images';
+import { Images } from '../../assets/images';
 import dp from '../../assets/dp.png';
 
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const WandDProfile = memo(({route}: any) => {
+const WandDProfile = memo(({ route }: any) => {
   const [user, setUser] = useState(route.params.data);
 
   const styles = useStyleSheet(themedStyles);
@@ -44,7 +44,7 @@ const WandDProfile = memo(({route}: any) => {
   const [selectedIndex, setSelectedIndex] = useState(null);
   const navigation = useNavigation();
 
-  const {height, width, top, bottom} = useLayout();
+  const { height, width, top, bottom } = useLayout();
 
   const StarIcon = props => <Icon {...props} name="star" />;
 
@@ -66,16 +66,6 @@ const WandDProfile = memo(({route}: any) => {
         <View style={styles.description}>
           <Text categry="s1">{user.name}</Text>
           <Text category="label">{user.email}</Text>
-          <Button
-            onPress={() => {
-              navigation.navigate('ChatPage', {data: user});
-            }}
-            style={styles.msgBtn}
-            appearance="outline"
-            status="primary"
-            size="small">
-            Message
-          </Button>
         </View>
       </View>
 
@@ -87,75 +77,75 @@ const WandDProfile = memo(({route}: any) => {
             <DrawerGroup
               title="Diet Plans"
               accessoryLeft={() => (
-                <Avatar source={Images.food} style={{marginLeft: 10}} />
+                <Avatar source={Images.food} style={{ marginLeft: 10 }} />
               )}>
               <DrawerItem
                 onPress={() =>
-                  navigation.navigate('DietPage', {title: 'Breakfast'})
+                  navigation.navigate('DietPage', { title: 'Breakfast' })
                 }
                 title="BreakFast"
                 accessoryLeft={() => (
-                  <Avatar source={Images.coffee} style={{marginLeft: 10}} />
+                  <Avatar source={Images.coffee} style={{ marginLeft: 10 }} />
                 )}
               />
               <DrawerItem
                 onPress={() =>
-                  navigation.navigate('DietPage', {title: 'Lunch'})
+                  navigation.navigate('DietPage', { title: 'Lunch' })
                 }
                 title="Lunch"
                 accessoryLeft={() => (
-                  <Avatar source={Images.hotdog} style={{marginLeft: 10}} />
+                  <Avatar source={Images.hotdog} style={{ marginLeft: 10 }} />
                 )}
               />
               <DrawerItem
                 title="Snacks"
                 onPress={() =>
-                  navigation.navigate('DietPage', {title: 'Snacks'})
+                  navigation.navigate('DietPage', { title: 'Snacks' })
                 }
                 accessoryLeft={() => (
-                  <Avatar source={Images.popcorn} style={{marginLeft: 10}} />
+                  <Avatar source={Images.popcorn} style={{ marginLeft: 10 }} />
                 )}
               />
               <DrawerItem
                 title="Dinner"
                 onPress={() =>
-                  navigation.navigate('DietPage', {title: 'Dinner'})
+                  navigation.navigate('DietPage', { title: 'Dinner' })
                 }
                 accessoryLeft={() => (
-                  <Avatar source={Images.ramen} style={{marginLeft: 10}} />
+                  <Avatar source={Images.ramen} style={{ marginLeft: 10 }} />
                 )}
               />
             </DrawerGroup>
             <DrawerGroup
               title="Workout Plans"
               accessoryLeft={() => (
-                <Avatar source={Images.target} style={{marginLeft: 10}} />
+                <Avatar source={Images.target} style={{ marginLeft: 10 }} />
               )}>
               <DrawerItem
                 title="Daily"
                 onPress={() =>
-                  navigation.navigate('WorkoutPage', {title: 'Daily Workout'})
+                  navigation.navigate('WorkoutPage', { title: 'Daily Workout' })
                 }
                 accessoryLeft={() => (
-                  <Avatar source={Images.saly22} style={{marginLeft: 10}} />
+                  <Avatar source={Images.saly22} style={{ marginLeft: 10 }} />
                 )}
               />
               <DrawerItem
                 title="Weekly"
                 onPress={() =>
-                  navigation.navigate('WorkoutPage', {title: 'Weekly Workout'})
+                  navigation.navigate('WorkoutPage', { title: 'Weekly Workout' })
                 }
                 accessoryLeft={() => (
-                  <Avatar source={Images.saly21} style={{marginLeft: 10}} />
+                  <Avatar source={Images.saly21} style={{ marginLeft: 10 }} />
                 )}
               />
               <DrawerItem
                 title="Monthly"
                 onPress={() =>
-                  navigation.navigate('WorkoutPage', {title: 'Monthly Workout'})
+                  navigation.navigate('WorkoutPage', { title: 'Monthly Workout' })
                 }
                 accessoryLeft={() => (
-                  <Avatar source={Images.saly35} style={{marginLeft: 10}} />
+                  <Avatar source={Images.saly35} style={{ marginLeft: 10 }} />
                 )}
               />
             </DrawerGroup>

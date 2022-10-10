@@ -1,5 +1,5 @@
 import React, { memo, useState, useEffect, useContext } from 'react';
-import { FlatList } from 'react-native';
+import { FlatList, View, Text, ActivityIndicator } from 'react-native';
 import { StyleService, useStyleSheet } from '@ui-kitten/components';
 import useLayout from '../../hooks/useLayout';
 
@@ -16,35 +16,20 @@ const Clients = memo(() => {
   const styles = useStyleSheet(themedStyles);
   const [chats, setChats] = useState([])
   const [refreshing, setRefreshing] = useState(false)
+  const [loading, setLoading] = useState(true)
+
   const fetchMessage = async () => {
-
     try {
-      console.log("here");
-
-      // const unsub = onSnapshot(doc(db, "userChats", currentUser.id), (doc) => {
-      //   doc && console.log(doc.data());
-
-      // })
-      // const filter = where('from', '==', 1);
-      const snapshot = await getDoc(doc(db, "userChats", currentUser.id));
-
-      setChats(snapshot.data())
-
-      // const unique = []
-      // d.filter((obj) => {
-      //   let i = unique.findIndex(x => x.from === obj.from)
-      //   if (i <= -1) {
-      //     unique.push(obj)
-      //   }
-      //   return null
-      // })
-      // setChats(unique);
-
+      if (currentUser.id) {
+        const snapshot = await getDoc(doc(db, "userChats", currentUser.id));
+        setChats(snapshot.data())
+        setLoading(false)
+      }
     } catch (error) {
       console.log(error);
-
     }
   }
+
   const onRefresh = async () => {
     setRefreshing(true)
     await fetchMessage()
@@ -59,17 +44,36 @@ const Clients = memo(() => {
     return <ClientDetails data={item} noFavoritesAdd={true} />;
   }, []);
   return (
-    <FlatList
-      data={Object.entries(chats)}
-      renderItem={renderItem}
-      scrollEventThrottle={16}
-      showsVerticalScrollIndicator={false}
-      keyExtractor={keyExtractor}
-      refreshing={refreshing}
-      onRefresh={onRefresh}
-      refreshControl={<RefreshControl tintColor="#F0DF67" />}
-      contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]}
-    />
+    <>
+      {loading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size={40} color="#fff" />
+        </View>
+      ) : (
+        <>
+          <FlatList
+            ListHeaderComponent={() => {
+              if (Object.entries(chats).length === 0) {
+                return (
+                  <Text style={{ color: '#fff', textAlign: 'center' }}>
+                    No Data
+                  </Text>
+                );
+              }
+              return null;
+            }}
+            data={Object.entries(chats)?.sort((a, b) => b[1].date - a[1].date)}
+            renderItem={renderItem}
+            scrollEventThrottle={16}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={keyExtractor}
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            contentContainerStyle={[styles.content, { paddingBottom: bottom + 32 }]}
+          />
+        </>
+      )}
+    </>
   );
 });
 

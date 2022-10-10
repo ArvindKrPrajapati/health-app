@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './type';
@@ -19,14 +19,16 @@ import Signup from '../screens/Signup';
 import { AuthContext } from '../context/AuthContext';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 const AppContainer = () => {
+  const [auth, setAuth] = useState(false)
   const { currentUser } = useContext(AuthContext)
+
   return (
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
         }}
-        initialRouteName={currentUser ? "Tab" : "Auth"}>
+        initialRouteName="Auth">
         <>
           <Stack.Screen name="Auth" component={Auth} />
           <Stack.Screen name="Signup" component={Signup} />
