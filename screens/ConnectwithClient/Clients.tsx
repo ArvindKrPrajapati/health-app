@@ -20,7 +20,7 @@ const Clients = memo(() => {
 
   const fetchMessage = async () => {
     try {
-      if (currentUser.id) {
+      if (currentUser?.id) {
         const snapshot = await getDoc(doc(db, "userChats", currentUser.id));
         setChats(snapshot.data())
         setLoading(false)
