@@ -57,7 +57,7 @@ const WandDProfile = memo(({ route }: any) => {
           backgroundColor: theme['background-basic-color-2'],
         }}
       />
-      <View contentContainerStyle={styles.contentContainerStyle}>
+      <View style={styles.contentContainerStyle}>
         <Image
           source={dp}
           //@ts-ignore
@@ -69,7 +69,26 @@ const WandDProfile = memo(({ route }: any) => {
         </View>
       </View>
 
-      <ScrollView>
+      <TouchableOpacity style={styles.btn}
+        onPress={() =>
+          navigation.navigate('DietPage', { title: 'Diet Plans' })
+        }
+      >
+        <Avatar source={Images.food} style={{ marginLeft: 10, marginRight: 10 }} />
+        <Text>Diet Plans</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.btn}
+        onPress={() =>
+          navigation.navigate('WorkoutPage', { title: 'Workout Plans' })
+        }
+      >
+        <Avatar source={Images.target} style={{ marginLeft: 10, marginRight: 10 }} />
+        <Text>Workout Plans</Text>
+      </TouchableOpacity>
+
+
+      {/* <ScrollView>
         <View style={styles.options}>
           <Drawer
             selectedIndex={selectedIndex}
@@ -151,7 +170,7 @@ const WandDProfile = memo(({ route }: any) => {
             </DrawerGroup>
           </Drawer>
         </View>
-      </ScrollView>
+      </ScrollView> */}
     </Container>
   );
 });
@@ -165,9 +184,8 @@ const themedStyles = StyleService.create({
     paddingBottom: 0,
   },
   contentContainerStyle: {
-    paddingTop: 24,
-    paddingHorizontal: 24,
     alignItems: 'center',
+    marginBottom: 20
   },
   avatar: {
     alignSelf: 'center',
@@ -236,20 +254,20 @@ const themedStyles = StyleService.create({
     marginTop: 20,
     alignItems: 'center',
   },
-  btn: {
-    flexDirection: 'row',
-    borderRadius: 10,
-    marginTop: windowHeight / 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 10,
-    width: windowWidth / 2.5,
-    height: windowHeight / 8,
-    backgroundColor: '#2E3A59',
-  },
-  btn_text: {
-    marginLeft: 15,
-  },
+  // btn: {
+  //   flexDirection: 'row',
+  //   borderRadius: 10,
+  //   marginTop: windowHeight / 20,
+  //   alignItems: 'center',
+  //   justifyContent: 'center',
+  //   padding: 10,
+  //   width: windowWidth / 2.5,
+  //   height: windowHeight / 8,
+  //   backgroundColor: '#2E3A59',
+  // },
+  // btn_text: {
+  //   marginLeft: 15,
+  // },
   nav: {
     paddingBottom: 8,
     paddingHorizontal: 4,
@@ -261,4 +279,13 @@ const themedStyles = StyleService.create({
     paddingHorizontal: 15,
     marginTop: 10,
   },
+  btn: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderRadius: 8,
+    backgroundColor: '#2E3A59',
+    padding: 10,
+    marginHorizontal: 24,
+    marginVertical: 5
+  }
 });

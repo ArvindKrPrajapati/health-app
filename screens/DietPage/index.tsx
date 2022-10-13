@@ -1,10 +1,11 @@
-import React, {memo, useState} from 'react';
+import React, { memo, useState } from 'react';
 import {
   StyleSheet,
   useWindowDimensions,
   View,
   Image,
   Switch,
+  ScrollView,
 } from 'react-native';
 import {
   TopNavigation,
@@ -17,9 +18,10 @@ import {
   TabView,
   Toggle,
   Text,
+  Icon,
 } from '@ui-kitten/components';
-import {useNavigation} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import useLayout from '../../hooks/useLayout';
 
 //import Text from "components/Text";
@@ -27,19 +29,21 @@ import Content from '../../components/Content';
 import Container from '../../components/Container';
 import NavigationAction from '../../components/NavigationAction';
 import Foods from './Foods';
+import NonVegLogo from '../../components/NonVegLogo';
+import VegLogo from '../../components/VegLogo';
 
-const DietPage = memo(({route}) => {
-  const {title} = route.params;
+const DietPage = memo(({ route }) => {
+  const { title } = route.params;
   const [checked, setChecked] = useState(false);
   const [checked2, setChecked2] = useState(false);
-  const {goBack} = useNavigation();
-  const {height, width, top, bottom} = useLayout();
+  const { goBack } = useNavigation();
+  const { height, width, top, bottom } = useLayout();
   const theme = useTheme();
   const styles = useStyleSheet(themedStyles);
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   return (
     <Container style={styles.container}>
-      <Layout level="2" style={[{paddingTop: top}]}>
+      <Layout level="2" style={[{ paddingTop: top }]}>
         <TopNavigation
           style={{
             ...styles.topNav,
@@ -55,32 +59,52 @@ const DietPage = memo(({route}) => {
       </Layout>
       <View style={styles.types}>
         <View style={styles.sub_types}>
-          <Switch
+          {/* <Switch
             trackColor={{false: '#8F9BB3', true: '#598BFF'}}
             thumbColor={checked ? '#0057C2' : '#94CBFF'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={setChecked}
             value={checked}
-          />
-          <Text category="s2">Veg</Text>
+          /> */}
+          <VegLogo size={25} />
+          <Text category="s2" style={{ marginHorizontal: 5 }}>Veg</Text>
         </View>
         <View style={styles.sub_types}>
-          <Switch
+          {/* <Switch
             trackColor={{false: '#8F9BB3', true: '#598BFF'}}
             thumbColor={checked2 ? '#0057C2' : '#94CBFF'}
             ios_backgroundColor="#3e3e3e"
             onValueChange={setChecked2}
             value={checked2}
-          />
-          <Text category="s2">Non-Veg</Text>
+          /> */}
+          <NonVegLogo size={25} />
+          <Text category="s2" style={{ marginHorizontal: 5 }}>Non-Veg</Text>
         </View>
       </View>
-      <Foods />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <>
+          <Text style={styles.category}>Breakfast</Text>
+          <Foods />
+        </>
+        <>
+          <Text style={styles.category}>Lunch</Text>
+          <Foods />
+        </>
+        <>
+          <Text style={styles.category}>Snacks</Text>
+          <Foods />
+        </>
+        <>
+          <Text style={styles.category}>Dinner</Text>
+          <Foods />
+        </>
+      </ScrollView>
     </Container>
   );
 });
 
 export default DietPage;
+
 
 const themedStyles = StyleService.create({
   container: {
@@ -112,4 +136,8 @@ const themedStyles = StyleService.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  category: {
+    fontSize: 12,
+    marginHorizontal: 24
+  }
 });

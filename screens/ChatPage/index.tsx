@@ -1,4 +1,4 @@
-import React, { memo, useState, useContext } from 'react';
+import React, { memo, useState, useContext, useEffect } from 'react';
 import { useWindowDimensions, View, Linking } from 'react-native';
 import {
   TopNavigation,
@@ -49,11 +49,15 @@ const Conversation = memo(({ route }: any) => {
   const [messages, setMessages] = React.useState<IMessage[]>();
   const roomId = '048d3f70-5dd6-4298-a1f5-cc0a1d580cca';
 
+
+
+
   const fetchMessage = async () => {
     try {
       const snapshot = await getDoc(doc(db, "chats", chatId));
-      setMessages((snapshot.data().messages.map(obj => ({ ...obj, createdAt: obj.createdAt.toDate() }))).reverse());
-
+      if (snapshot.exists()) {
+        setMessages((snapshot.data().messages.map(obj => ({ ...obj, createdAt: obj.createdAt.toDate() }))).reverse());
+      }
     } catch (error) {
       console.log(error);
 
@@ -167,14 +171,14 @@ const Conversation = memo(({ route }: any) => {
               icon="video"
               marginRight={4}
               nav="VideoCall"
-              params={{ roomId }}
+              params={{ data: user, chatId, roomId }}
             />
             <NavigationAction
               icon="phoneCall"
               size="large"
               marginRight={4}
               nav="AudioCall"
-              params={{ roomId }}
+              params={{ data: user, chatId, roomId }}
             />
           </View>
         }

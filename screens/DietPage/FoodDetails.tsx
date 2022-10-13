@@ -7,8 +7,10 @@ import {
   Dimensions,
   ImageStyle,
 } from 'react-native';
-import {StyleService, useStyleSheet, Icon, Text} from '@ui-kitten/components';
-import {useNavigation} from '@react-navigation/native';
+import { StyleService, useStyleSheet, Icon, Text } from '@ui-kitten/components';
+import { useNavigation } from '@react-navigation/native';
+import VegLogo from '../../components/VegLogo';
+import NonVegLogo from '../../components/NonVegLogo';
 
 interface Props {
   image: ImageSourcePropType;
@@ -16,6 +18,7 @@ interface Props {
   quantity: number;
   gam: number;
   cals: number;
+  isVeg: boolean;
 }
 interface ItemProps {
   data: Props;
@@ -24,7 +27,7 @@ interface ItemProps {
 
 const windowWidth = Dimensions.get('window').width;
 
-const FoodDetails = ({data, noFavoritesAdd}: ItemProps) => {
+const FoodDetails = ({ data, noFavoritesAdd }: ItemProps) => {
   const styles = useStyleSheet(themedStyles);
   const [selected, setSelected] = React.useState(false);
   const [count, setCount] = React.useState(0);
@@ -33,57 +36,64 @@ const FoodDetails = ({data, noFavoritesAdd}: ItemProps) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() =>
-          navigation.navigate<string>('FoodInformation', {
-            name: data.name,
-            image: data.image,
-          })
-        }>
-        <Image source={data.image} style={styles.image as ImageStyle} />
-      </TouchableOpacity>
       <View>
-        <Text category="s1">{data.name}</Text>
+        {
+          data.isVeg ? <VegLogo size={15} /> : <NonVegLogo size={15} />
+        }
+        <Text category="s1" style={{ marginTop: 5 }}>{data.name}</Text>
         <View style={styles.calsView}>
           <Text category="label">{data.cals} Cals</Text>
           <View style={styles.dot} />
           <Text category="label">{`${data.quantity} medium (${data.gam}g)`}</Text>
         </View>
       </View>
-      <View style={styles.addbtn}>
+
+      <View style={{ alignItems: "center" }}>
         <TouchableOpacity
-          onPress={() => setCount(prev => (prev ? prev - 1 : prev))}>
-          {count ? (
-            <Icon
-              pack="assets"
-              name="minus"
-              style={{
-                tintColor: '#D4D4D4',
-                marginHorizontal: 5,
-                width: 10,
-                height: 10,
-              }}
-            />
-          ) : null}
+          onPress={() =>
+            navigation.navigate<string>('FoodInformation', {
+              name: data.name,
+              image: data.image,
+            })
+          }>
+          <Image source={data.image} style={styles.image as ImageStyle} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setCount(prev => prev + 1)}>
-          <Text category="label">{count <= 0 ? 'ADD' : count}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => setCount(prev => prev + 1)}>
-          {count ? (
-            <Icon
-              pack="assets"
-              name="union"
-              style={{
-                tintColor: '#D4D4D4',
-                marginHorizontal: 5,
-                width: 10,
-                height: 10,
-              }}
-            />
-          ) : null}
-        </TouchableOpacity>
+        <View style={styles.addbtn}>
+          <TouchableOpacity
+            onPress={() => setCount(prev => (prev ? prev - 1 : prev))}>
+            {count ? (
+              <Icon
+                pack="assets"
+                name="minus"
+                style={{
+                  tintColor: '#D4D4D4',
+                  marginHorizontal: 5,
+                  width: 10,
+                  height: 10,
+                }}
+              />
+            ) : null}
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setCount(prev => prev + 1)}>
+            <Text category="label">{count <= 0 ? 'ADD' : count}</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => setCount(prev => prev + 1)}>
+            {count ? (
+              <Icon
+                pack="assets"
+                name="union"
+                style={{
+                  tintColor: '#D4D4D4',
+                  marginHorizontal: 5,
+                  width: 10,
+                  height: 10,
+                }}
+              />
+            ) : null}
+          </TouchableOpacity>
+        </View>
       </View>
+
     </View>
   );
 };
@@ -95,14 +105,14 @@ const themedStyles = StyleService.create({
     flexDirection: 'row',
     borderRadius: 8,
     backgroundColor: '#2E3A59',
-    paddingVertical: 40,
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 18,
-    marginBottom: 24,
+    padding: 15,
+    marginBottom: 15,
+    paddingHorizontal: 27
   },
   image: {
-    marginRight: 20,
+    marginVertical: 10
   },
   calsView: {
     flexDirection: 'row',

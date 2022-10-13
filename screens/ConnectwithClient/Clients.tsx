@@ -20,7 +20,7 @@ const Clients = memo(() => {
 
   const fetchMessage = async () => {
     try {
-      if (currentUser.id) {
+      if (currentUser?.id) {
         const snapshot = await getDoc(doc(db, "userChats", currentUser.id));
         setChats(snapshot.data())
         setLoading(false)
@@ -38,7 +38,7 @@ const Clients = memo(() => {
 
   useEffect(() => {
     fetchMessage()
-  }, [currentUser.id]);
+  }, [currentUser?.id]);
 
   const renderItem = React.useCallback(({ item }) => {
     return <ClientDetails data={item} noFavoritesAdd={true} />;

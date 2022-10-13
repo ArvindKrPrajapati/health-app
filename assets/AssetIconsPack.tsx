@@ -1,8 +1,8 @@
 import React from 'react';
-import {Image, ImageProps, ImageSourcePropType, StyleSheet} from 'react-native';
-import {IconPack, IconProvider} from '@ui-kitten/components';
-import {SvgProps} from 'react-native-svg';
-import {Icons} from './icons';
+import { Image, ImageProps, ImageSourcePropType, StyleSheet } from 'react-native';
+import { IconPack, IconProvider } from '@ui-kitten/components';
+import { SvgProps } from 'react-native-svg';
+import { Icons } from './icons';
 
 const createIcon = (source: ImageSourcePropType): IconProvider<ImageProps> => {
   return {
@@ -28,6 +28,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
   name: 'assets',
   icons: {
     leftArrow: createIcon(Icons.leftArrow),
+    dropdown: createIcon(Icons.d),
     rightArrow: createIcon(Icons.rightArrow),
     upArrow: createIcon(Icons.upArrow),
     downArrow: createIcon(Icons.downArrow),
@@ -143,6 +144,7 @@ const AssetIconsPack: IconPack<ImageProps | SvgProps> = {
     video: createIcon(Icons.video),
     billBoard: createIcon(Icons.billBoard),
     done: createIcon(Icons.check),
+    dropdown: createIcon(Icons.arrDropdown),
   },
 };
 export default AssetIconsPack;

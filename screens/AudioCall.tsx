@@ -1,24 +1,24 @@
-import {StackActions, useNavigation} from '@react-navigation/native';
-import React, {useEffect, useMemo, useReducer, useRef, useState} from 'react';
+import { StackActions, useNavigation } from '@react-navigation/native';
+import React, { useContext, useEffect, useMemo, useReducer, useRef, useState } from 'react';
 import {
   Animated,
   FlatList,
   Pressable,
   StyleSheet,
   View,
-  Text,
 } from 'react-native';
 import InCallManager from 'react-native-incall-manager';
 import LinearGradient from 'react-native-linear-gradient';
 import Peer from 'react-native-peerjs';
-import {mediaDevices, RTCView} from 'react-native-webrtc';
-import {io} from 'socket.io-client';
-import {Avatar, Icon, useTheme} from '@ui-kitten/components';
+import { mediaDevices, RTCView } from 'react-native-webrtc';
+import { io } from 'socket.io-client';
+import { Avatar, Icon, useTheme, Text } from '@ui-kitten/components';
 import commonStyles from '../assets/commonStyles';
-import {MEET_API_URL, PeerServerConfig} from '../constants/Config';
-import {Images} from '../assets/images';
+import { MEET_API_URL, PeerServerConfig } from '../constants/Config';
+import { Images } from '../assets/images';
+import { AuthContext } from '../context/AuthContext';
 
-const Header = ({handleGoBack}) => {
+const Header = ({ handleGoBack }) => {
   const [speakerOn, setSpeakerOn] = useState(true);
   const theme = useTheme();
 
@@ -101,7 +101,7 @@ const ButtonsTab = ({
         onPress={toggleMic}
         style={[
           styles.videoBtn,
-          !audio ? {backgroundColor: theme['color-basic-400']} : {},
+          !audio ? { backgroundColor: theme['color-basic-400'] } : {},
         ]}>
         {audio ? (
           <Icon name="headphone" color={theme['color-basic-100']} />
@@ -116,7 +116,7 @@ const ButtonsTab = ({
   );
 };
 
-const Stream = ({stream, audio, video}) => {
+const Stream = ({ stream, audio, video, user, iconSize }) => {
   const [_stream, setStream] = useState(null);
   const theme = useTheme();
 
@@ -125,24 +125,27 @@ const Stream = ({stream, audio, video}) => {
   }, [stream]);
 
   return (
-    <View style={streamStyle.container}>
+    <View>
       {!audio && (
         <View style={streamStyle.wrap}>
           <Icon name="time" color={theme['color-basic-100']} />
         </View>
       )}
       {stream ? (
-          <RTCView
-            streamURL={(_stream as any)?.toURL() as any}
-            style={streamStyle.video}
-            zOrder={1}
-          />
-      ) : (
-        <Icon
-          name="user"
-          style={streamStyle.image}
-          color={theme['color-basic-100']}
+        <RTCView
+          streamURL={(_stream as any)?.toURL() as any}
+          style={streamStyle.video}
+          zOrder={1}
         />
+      ) : (
+        <View style={streamStyle.container}>
+          <Icon
+            name="user"
+            style={[streamStyle.image, { padding: iconSize }]}
+            color={theme['color-basic-100']}
+          />
+          <Text>{user.name}</Text>
+        </View>
       )}
       {/* <View style={their.credits}>
         <Text style={their.text}>Ajay</Text>
@@ -153,20 +156,13 @@ const Stream = ({stream, audio, video}) => {
 };
 const streamStyle = StyleSheet.create({
   container: {
-    width: '48%',
-    height: 256,
-    borderRadius: 10,
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#2e3032',
-    margin: 5,
-    overflow: 'hidden',
+    paddingTop: "49%",
+
   },
   image: {
-    padding: 18,
     borderRadius: 100,
-    marginVertical: 15,
-    marginTop:-148,
+    marginBottom: 5,
     backgroundColor: '#707578',
     // resizeMode : 'contain'
   },
@@ -227,7 +223,7 @@ const reducer = (state, action) => {
         ),
       };
     case 'setMyStream':
-      return {...state, myStream: action.payload};
+      return { ...state, myStream: action.payload };
     case 'setMyPeerId':
       state.myPeerId = action.payload;
       return state;
@@ -243,7 +239,7 @@ const reducer = (state, action) => {
       };
     case 'removePeer':
       state.peers.delete(action.payload);
-      return {...state, peers: new Map(state.peers)};
+      return { ...state, peers: new Map(state.peers) };
     case 'setRoomId':
       state.roomId = action.payload;
       return state;
@@ -282,10 +278,11 @@ const reducer = (state, action) => {
   }
 };
 
-const action = (type, payload: any = null) => ({type, payload});
+const action = (type, payload: any = null) => ({ type, payload });
 
-export default function AudioCall({route}) {
+export default function AudioCall({ route }) {
   let name = 'User';
+  const { currentUser } = useContext(AuthContext)
   const [pushed, setPushed] = useState(false);
   const [socketIdSet, setSocketIdSet] = useState(false);
   const [peerIdSet, setPeerIdSet] = useState(false);
@@ -300,7 +297,7 @@ export default function AudioCall({route}) {
   const navigation = useNavigation();
 
   const socket = useMemo(() => {
-    const _socket = io(MEET_API_URL, {forceNew: true});
+    const _socket = io(MEET_API_URL, { forceNew: true });
 
     _socket.on('store-id', socketId => {
       dispatch(action('setMySocketId', socketId));
@@ -353,7 +350,7 @@ export default function AudioCall({route}) {
             // },
           })
           .then(stream => {
-            joinRoom({room: route.params?.roomId, stream});
+            joinRoom({ room: route.params?.roomId, stream });
           })
           .catch(console.error);
       });
@@ -364,7 +361,7 @@ export default function AudioCall({route}) {
     leaveRoom({
       callback: () => {
         navigation.dispatch({
-          ...StackActions.replace('ChatPage'),
+          ...StackActions.replace('ChatPage', { data: route.params?.data, id: route.params.id }),
           source: route.key,
           target: navigation.getState().key,
         });
@@ -374,14 +371,14 @@ export default function AudioCall({route}) {
 
   const toggleMic = () => {
     InCallManager.setMicrophoneMute(state.mic);
-    toggleMedia({kind: 'audio', value: !state.mic});
+    toggleMedia({ kind: 'audio', value: !state.mic });
   };
 
   const toggleVideo = () => {
-    toggleMedia({kind: 'video', value: !state.video});
+    toggleMedia({ kind: 'video', value: !state.video });
   };
 
-  const joinRoom = ({stream: myStream, room}) => {
+  const joinRoom = ({ stream: myStream, room }) => {
     const get = what => state[what];
 
     dispatch(action('resetState'));
@@ -410,7 +407,7 @@ export default function AudioCall({route}) {
     socket.on('someone-introducing', thatSomeone => {
       dispatch(action('addPeer', thatSomeone));
     });
-    socket.on('someone-left', ({peerId: _peerId, name: _name}) => {
+    socket.on('someone-left', ({ peerId: _peerId, name: _name }) => {
       dispatch(action('removePeer', _peerId));
     });
     socket.on('someone-toggled-their-media', toggleData => {
@@ -420,7 +417,7 @@ export default function AudioCall({route}) {
     peerServer.on('call', call => {
       call.answer(myStream);
       call.on('stream', stream => {
-        dispatch(action('addStreamToAPeer', {peerId: call.peer, stream}));
+        dispatch(action('addStreamToAPeer', { peerId: call.peer, stream }));
       });
     });
 
@@ -431,13 +428,13 @@ export default function AudioCall({route}) {
       name,
     });
 
-    InCallManager.start({media: 'audio/video'});
+    InCallManager.start({ media: 'audio/video' });
     InCallManager.setSpeakerphoneOn(false);
     InCallManager.setForceSpeakerphoneOn(true);
     InCallManager.setMicrophoneMute(false);
   };
 
-  const leaveRoom = ({callback}) => {
+  const leaveRoom = ({ callback }) => {
     const get = what => state[what];
 
     socket.disconnect();
@@ -456,7 +453,7 @@ export default function AudioCall({route}) {
     callback?.();
   };
 
-  const toggleMedia = ({value, kind}) => {
+  const toggleMedia = ({ value, kind }) => {
     const get = what => state[what];
     socket.emit('toggle-media', {
       value,
@@ -464,7 +461,7 @@ export default function AudioCall({route}) {
       room: get('roomId'),
       kind,
     });
-    dispatch(action('toggleMediaFulfilled', {value, kind}));
+    dispatch(action('toggleMediaFulfilled', { value, kind }));
   };
 
   const fadeIn = () => {
@@ -532,51 +529,61 @@ export default function AudioCall({route}) {
 
   return (
     <View style={styles.container}>
-      <Animated.View style={[styles.headerContainer, {top: topValue}]}>
+      <Animated.View style={[styles.headerContainer, { top: topValue }]}>
         <LinearGradient
           style={styles.background}
-          colors={['rgba(2,3,2,1)', 'rgba(15,17,19,1)', 'rgba(255,255,255,0)']}
+          colors={['rgba(2,3,2,0.6)', 'rgba(15,17,19,0.2)', 'rgba(255,255,255,0)']}
         />
         <Header handleGoBack={handleLeave} />
       </Animated.View>
       <Pressable onPress={pressing} style={styles.playarea}>
         <RenderStreams
           streams={[
-            {stream: state.myStream, audio: state.mic, video: state.video},
+            { stream: state.myStream, audio: state.mic, video: state.video },
             ...([...(state?.peers ?? [])].map(([_, peer]) => ({
               stream: peer.stream,
               audio: peer.audio,
               video: peer.video,
             })) ?? []),
           ]}
+          user={route.params?.data}
+          currentUser={currentUser}
         />
       </Pressable>
-      <Animated.View style={[styles.bottomContainer, {bottom: bottomValue}]}>
+      <Animated.View style={[styles.bottomContainer, { bottom: bottomValue }]}>
         <ButtonsTab
           mic={state.mic}
           video={state.video}
-          {...{toggleMic, toggleVideo, handleLeave}}
+          {...{ toggleMic, toggleVideo, handleLeave }}
         />
         <LinearGradient
           style={[styles.background, styles.bottomGradient]}
-          colors={['rgba(2,3,2,1)', 'rgba(15,17,19,1)', 'rgba(255,255,255,0)']}
+          colors={['rgba(2,3,2,0.6)', 'rgba(15,17,19,0.2)', 'rgba(255,255,255,0)']}
         />
       </Animated.View>
     </View>
   );
 }
 
-const RenderStreams = ({streams}) => {
-  const render = ({item: stream}) => <Stream {...stream} />;
+const RenderStreams = ({ streams, currentUser, user }) => {
+  const render = ({ item: stream }) => <Stream {...stream} />;
 
   return (
-    <FlatList
-      style={styles.streamList}
-      data={streams}
-      renderItem={render}
-      numColumns={2}
-      keyExtractor={(_, idx) => idx.toString()}
-    />
+    <>
+      <View style={styles.me}>
+        <Stream {...streams[1]} user={user} iconSize={30} />
+      </View>
+      <View style={styles.you}>
+        <Stream {...streams[0]} user={currentUser} iconSize={15} />
+      </View>
+    </>
+    // <FlatList
+    //   style={styles.streamList}
+    //   data={streams}
+    //   renderItem={render}
+    //   numColumns={2}
+    //   keyExtractor={(_, idx) => idx.toString()}
+    // />
   );
 };
 
@@ -605,7 +612,7 @@ const styles = StyleSheet.create({
   bottomGradient: {
     height: 130,
     bottom: 0,
-    transform: [{rotate: '180deg'}],
+    transform: [{ rotate: '180deg' }],
   },
   btnContainer: {
     position: 'absolute',
@@ -639,8 +646,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   playarea: {
+    // height: Dimensions.get("window").height - 200,
+    // marginTop: 90,
+    // marginHorizontal: 12
+    height: "100%"
+  },
+  fullPlayArea: {
     height: '100%',
-    paddingVertical: 8,
   },
   header: {
     zIndex: 3,
@@ -669,5 +681,20 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
     borderRadius: 5,
   },
-  volumeIcon: {paddingHorizontal: 4},
+  volumeIcon: { paddingHorizontal: 4 },
+  me: {
+    flex: 1,
+    backgroundColor: "#101010",
+  },
+  you: {
+    position: "absolute",
+    width: 140,
+    height: 180,
+    backgroundColor: "black",
+    bottom: 10,
+    right: 10,
+    borderRadius: 5,
+    overflow: "hidden",
+
+  }
 });

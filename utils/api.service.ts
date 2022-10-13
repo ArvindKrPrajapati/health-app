@@ -36,13 +36,15 @@ const common = (data, method, token) => {
 
 const _login = async (email: string, password: string) => {
     try {
-        const res = await fetch(url + "login", {
-            method: "POST",
-            body: JSON.stringify({ email, password })
-        })
-        const result = res?.json()
+        // const res = await fetch(url + "login", {
+        //     method: "POST",
+        //     body: JSON.stringify({ email, password })
+        // })
+        // const result = res?.json()
         // this api is not working
-        if (false) {
+        if (true) {
+            console.log("hii");
+
             const coach = collection(db, 'coach');
             const filter = where('email', '==', email);
             const snapshot = await getDocs(query(coach, filter));
